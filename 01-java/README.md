@@ -1,1 +1,0 @@
-### java tech relative knownloges.

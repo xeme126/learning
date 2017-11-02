@@ -1,4 +1,4 @@
-### ignore git files.
+### git ignore files.
 .project
 .classpath
 .settings

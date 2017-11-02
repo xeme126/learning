@@ -1,1 +1,1 @@
-### This is git repository for learning.
+学习笔记

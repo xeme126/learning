@@ -1,0 +1,128 @@
+### Maven template
+/target/
+/logs/
+
+### Maven template
+target/
+pom.xml.tag
+pom.xml.releaseBackup
+pom.xml.versionsBackup
+pom.xml.next
+release.properties
+dependency-reduced-pom.xml
+buildNumber.properties
+.mvn/timing.properties
+
+# ignore eclipse files
+.project
+.classpath
+.settings
+.metadata
+
+# Java template
+*.class
+*.jar
+*.war
+*.ear
+
+### virtual machine crash logs
+hs_err_pid*
+
+### MacOS files #
+._*
+.Trashes
+.DS_Store
+.DS_Store?
+.Spotlight-V100
+Icon?
+ehthumbs.db
+Thumbs.db
+
+### Windows template
+# Windows shortcuts
+*.lnk
+
+# Windows image file caches
+Thumbs.db
+ehthumbs.db
+
+# Folder config file
+Desktop.ini
+
+# Recycle Bin used on file shares
+$RECYCLE.BIN/
+
+# mpeltonen/sbt-idea plugin
+.idea_modules/
+
+# Gradle:
+.idea/gradle.xml
+.idea/
+
+### JetBrains template
+# User-specific stuff:
+.idea/workspace.xml
+.idea/tasks.xml
+.idea/dictionaries
+.idea/vcs.xml
+.idea/jsLibraryMappings.xml
+
+# Sensitive or high-churn files:
+.idea/dataSources.ids
+.idea/dataSources.xml
+.idea/dataSources.local.xml
+.idea/sqlDataSources.xml
+.idea/dynamic.xml
+.idea/uiDesigner.xml
+
+
+# Mongo Explorer plugin:
+.idea/mongoSettings.xml
+
+## File-based project format:
+*.iws
+
+## Plugin-specific files:
+# IntelliJ
+/out/
+
+# JIRA plugin
+atlassian-ide-plugin.xml
+
+# Crashlytics plugin (for Android Studio and IntelliJ)
+com_crashlytics_export_strings.xml
+crashlytics.properties
+crashlytics-build.properties
+fabric.properties
+
+# Windows Installer files
+*.cab
+*.msi
+*.msm
+*.msp
+
+
+ ##filter databfile¡¢sln file##
+*.mdb
+*.ldb
+*.sln
+##class file##
+*.com
+*.class
+*.dll
+*.exe
+*.o
+*.so
+# compression file
+*.7z
+*.dmg
+*.gz
+*.iso
+*.jar
+*.rar
+*.tar
+*.zip
+*.via
+*.tmp
+*.err
+

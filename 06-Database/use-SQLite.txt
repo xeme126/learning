@@ -1,0 +1,44 @@
+
+###使用SQLite自增字段及唯一字段应严格注意写法 ###
+===============================================
+（１）自增字段：顺序写错或写错则出错或不起效
+uid integer primary key autoincrement,
+（２） 唯一字段
+users varchar(50) not null default '' unique,
+===============================================
+select * from sqlite_sequence
+select * from sqlite_master
+select * from sqlite_master where type='index'
+select * from sqlite_master where type='table' 
+===============================================
+
+创建表:
+===============================================
+drop table if exists sysUser ;
+
+create table if not exists sysUser (
+uid integer primary key autoincrement,
+users varchar(50) not null default '' unique,
+passw varchar(50) not null default '',
+state tinyint(1) not null default 0 );
+
+insert into sysUser (users, passw, state) values ('liujy','123123',1),('zhang','123123',1),('liuyu','123123',1); 
+
+select * from sysUser;
+===============================================
+
+drop table if exists sysUser2 ;
+create table if not exists sysUser2 (
+uid integer primary key autoincrement,
+users varchar(50) not null default '' unique,
+passw varchar(50) not null default '',
+salts varchar(50) not null default '',
+memos varchar(90) not null default '',
+state tinyint(1) not null default 0, 
+unique key (uid) );
+
+insert into sysUser (users, passw, state) values ('liujy','123123',1),('zhang','123123',1),('liuyu','123123',1); 
+===============================================
+
+create table if not exists tb_users (kid integer primary key autoincrement , kws varchar(50), kvs varchar(50)); 
+

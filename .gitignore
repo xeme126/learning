@@ -9,10 +9,12 @@
 *.war
 *.ear
 
-### Windows template
 *.lnk
+*.tmp
+*.tmp.txt
+
+### Windows template
 Thumbs.db
 ehthumbs.db
 Desktop.ini
 $RECYCLE.BIN/
-

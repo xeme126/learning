@@ -1,0 +1,22 @@
+
+
+### 配置tomcat管理用户 ### 
+编辑文件conf/tomcat-users.xml 按需增减如下
+－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－
+<role rolename="tomcat"/>
+<role rolename="role1"/>
+<role rolename="admin-gui"/>
+<role rolename="admin-script"/>
+<role rolename="manager-jmx"/>
+<role rolename="manager-gui"/>
+<role rolename="manager-script"/>
+<role rolename="manager-status"/>
+<role rolename="poweruser"/>
+<role rolename="probeuser"/>
+<role rolename="manager"/>
+<user username="tomcat" password="tomcat" roles="tomcat"/>
+<user username="role1" password="tomcat" roles="role1"/>
+<user username="both" password="tomcat" roles="tomcat,role1"/>
+<user username="probe" password="probe" roles="manager,poweruser,probeuser"/>
+<user username="probe1" password="probe1" roles="tomcat,admin-gui,admin-script,manager-gui,manager-script,manager-jmx,manager-status,poweruser,probeuser"/>
+－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－

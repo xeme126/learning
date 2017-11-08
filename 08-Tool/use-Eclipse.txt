@@ -1,0 +1,9 @@
+
+### Eclipse正则
+^[0-9]+[\n\r]+
+
+（１）去掉自动生成方法里的注释，设置如下：
+1、在菜单栏中Window --> Preferences -->Java -->Code Style -->Code Templates--> Code --> Method body
+然后单击右边的编辑(edit)按钮,就可以把Auto-generated method stub删除
+2、在菜单栏中Window --> Preferences -->Java -->Editor-->Templates
+然后找到try选项，双击进行编辑，将 //TODO: handle exception删除

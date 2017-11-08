@@ -10,6 +10,7 @@
 *.ear
 
 ### Windows template
+
 *.lnk
 Thumbs.db
 ehthumbs.db

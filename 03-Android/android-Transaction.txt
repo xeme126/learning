@@ -1,0 +1,118 @@
+### Eclipse正则
+^[0-9]+[\n\r]+
+
+db.beginTransaction();
+xxxx….
+db.setTransactionSuccessful();
+db.endTransaction();
+db.beginTransaction();
+
+try{
+    long start = System.currentTimeMillis();
+    for(User user:users){
+    SQLiteStatement statement=db.compileStatement(sql_insert.toString());
+    statement.bindString(1, user.getName());
+    statement.bindLong(2, user.getGender());
+    statement.bindLong(3, user.getAge());
+    statement.bindString(4, user.getPhoneNumber());
+    statement.bindString(5, user.getAddress());
+    statement.executeInsert();
+    }
+    long end = System.currentTimeMillis();
+    //return end - start;
+    db.setTransactionSuccessful();
+   }finally{
+   db.endTransaction();
+}}
+
+Android开发中使用SQLite
+//如果数据库不存在就直接创建库，存在则直接打开库
+SQLiteDatabase db = helper.getWritableDatabase();
+//如果数据库不存在就直接创建库，存在则直接打开库，磁盘满的时候，返回的是只读数据库
+SQLiteDatabase db = helper.getReadableDatabase();
+SQLite常用系统表：
+select * from sqlite_master ;
+select * from sqlite_sequence ;
+备记(SQLite创建自增字段时)：
+uid integer auto_increment primary key
+在auto_increment前不能有not null default 0等语句
+
+不管你使用了哪个注解，作用仅仅是屏蔽android lint错误，所以在方法中还要判断版本做不同的操作，比如：
+if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.GINGERBREAD) {  
+    //
+} else {// Pre GINGERBREAD  
+    //  
+}  
+
+在android4.2的模拟器上有一个问题，就是在运行模拟器的时候。老是会弹出Unexpected value from nativeGetEnabledTags: 0提示，查询后得知是sdk的一个bug。
+虽然不影响使用，但是看着还是不爽。解决方法：
+在LogCat左面有一个filter按钮，点开在by log message一栏填入^(?!.*(nativeGetEnabledTags)).*$即可。
+过滤器名字（filter name）就看心情随便取一个就可以了。
+        
+	public static class MyHandler extends Handler {  
+       private WeakReference<Activity> reference;  
+       public MyHandler(Activity activity) {  
+           reference = new WeakReference<Activity>(activity);  
+       }  
+       @Override  
+       public void handleMessage(Message msg) {  
+           if (reference.get() != null) {  
+               switch (msg.what) {  
+               case 0:  
+                   // do something...  
+                   break;  
+               default:  
+                   // do something...  
+                   break;  
+               }  
+           }  
+       }  
+   }
+   
+@TargetApi(11)
+public void reqFragmentManger(){
+      if(Build.Version.SDK_INIT >= Build.VersionCodes.HONEYCOMB) {
+             FragmentManager manager = getFragmentManager();
+       }
+}
+ 
+SuppressLint解决办法  
+使用Eclipse编译Android程序时经常会遇到@SuppressLint或者@SuppressWarnings黄色警告，虽然不去处理程序依然能够运行，但是强迫症表示看着实在不舒服。实际上，解决这些问题往往会提高程序的安全性、可用性、性能等。
+1、@SuppressLint("DrawAllocation")
+原因：View及其子类的onDraw(Canvas canvas)方法会实时调用以更新界面，所以在onDraw(Canvas canvas)方法中实例化对象（比如Paint paint = new Paint()）会影响效率。
+解决办法：将这些对象改为类的成员变量。
+2、@SuppressWarnings("rawtypes")
+@SuppressWarnings({ "unchecked", "rawtypes" })
+Class clazz = Class.forName("android.view.Display");
+Class<?> clazz = Class.forName("android.view.Display");
+3、@SuppressLint("HandlerLeak")
+原因：Handler在Android中用于消息的发送与异步处理，常常在Activity中作为一个匿名内部类来定义，此时Handler会隐式地持有一个外部类对象（通常是一个Activity）的引用。当Activity已经被用户关闭时，由于Handler持有Activity的引用造成Activity无法被GC回收，这样容易造成内存泄露。
+正确的做法是将其定义成一个静态内部类（此时不会持有外部类对象的引用），在构造方法中传入Activity并对Activity对象增加一个弱引用，这样Activity被用户关闭之后，即便异步消息还未处理完毕，Activity也能够被GC回收，从而避免了内存泄露。
+    public static class MyHandler extends Handler {
+        private WeakReference<Activity> reference;
+        public MyHandler(Activity activity) {
+            reference = new WeakReference<Activity>(activity);
+        }
+        @Override
+        public void handleMessage(Message msg) {
+            if (reference.get() != null) {
+                switch (msg.what) {
+                case 0:
+                    // do something...
+                    break;
+                default:
+                    // do something...
+                    break;
+                }
+            }
+        }
+    }
+4、@SuppressLint("SimpleDateFormat")
+    SimpleDateFormat format = new SimpleDateFormat(pattern);
+    SimpleDateFormat format = new SimpleDateFormat(pattern, Locale.getDefault());
+5、@SuppressLint("DefaultLocale") 
+	String lower = string.toLowerCase();
+	String lower = string.toLowerCase(Locale.getDefault());
+	
+  
+	

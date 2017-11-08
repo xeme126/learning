@@ -1,1 +1,16 @@
 Android开发
+
+        <activity android:name="com.yuba.tests.SQLiteActivity">
+            <intent-filter>
+                <action android:name="test.sqlite"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+            </intent-filter>
+        </activity>
+        
+        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        startActivityForResult(intent, REQ_1);
+        
+        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        Uri uri = Uri.fromFile(new File(filePath));
+        intent.putExtra(MediaStore.EXTRA_OUTPUT, uri);
+        startActivityForResult(intent, REQ_2);

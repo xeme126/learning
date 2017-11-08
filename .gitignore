@@ -16,3 +16,10 @@ ehthumbs.db
 Desktop.ini
 $RECYCLE.BIN/
 
+### Maven or Android ignore dir or files
+/target/
+/logs/
+/gen/
+/bin/
+.git
+.svn

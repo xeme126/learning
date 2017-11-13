@@ -1,6 +1,11 @@
 
 
-### 配置tomcat管理用户 ### 
+http://www.blogjava.net/zhouf/articles/432234.html
+
+### 配置tomcat虚拟目录  ###
+<Context path="" docBase="E:/0AVMS/MavenSpringTests/target/tests" reloadable="false" crossContext="false" />
+
+### 配置tomcat管理用户 ###
 编辑文件conf/tomcat-users.xml 按需增减如下
 －－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－
 <role rolename="tomcat"/>
@@ -19,4 +24,98 @@
 <user username="both" password="tomcat" roles="tomcat,role1"/>
 <user username="probe" password="probe" roles="manager,poweruser,probeuser"/>
 <user username="probe1" password="probe1" roles="tomcat,admin-gui,admin-script,manager-gui,manager-script,manager-jmx,manager-status,poweruser,probeuser"/>
+－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－
+### 配置tomcat数据源 ###
+
+    <Resource name="jdbc/ds_hsql"
+        auth="Container"
+        type="javax.sql.DataSource"
+        driverClassName="org.hsqldb.jdbcDriver"
+        url="jdbc:hsqldb:file:./bin/afa/hsql.db3"
+        username="tests"
+        password="tests"
+        initialSize="3"
+        maxActive="90"
+        maxWait="12000"
+        removeAbandonedOnBorrow="true"
+        removeAbandonedOnMaintenance="true"
+        removeAbandonedTimeout="60"
+        removeAbandoned="true"
+        logAbandoned="true"
+        validationQuery="select count(1) as cnt from information_schema.tables"
+        testWhileIdle = "true"
+        timeBetweenEvictionRunsMillis="30000"
+        minEvictableIdleTimeMillis="1800000"
+        numTestsPerEvictionRun="3"
+        testOnBorrow="false" />
+
+    <Resource name="jdbc/ds_h2db"
+        auth="Container"
+        type="javax.sql.DataSource"
+        driverClassName="org.h2.Driver"
+        url="jdbc:h2:./bin/afa/h2db.db2"
+        username="tests"
+        password="tests"
+        initialSize="3"
+        maxActive="90"
+        maxWait="12000"
+        removeAbandonedOnBorrow="true"
+        removeAbandonedOnMaintenance="true"
+        removeAbandonedTimeout="60"
+        removeAbandoned="true"
+        logAbandoned="true"
+        validationQuery="select count(1) as cnt from information_schema.tables"
+        testWhileIdle = "true"
+        timeBetweenEvictionRunsMillis="30000"
+        minEvictableIdleTimeMillis="1800000"
+        numTestsPerEvictionRun="3"
+        testOnBorrow="false" />
+
+
+－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－
+### tomcat ###
+<Connector port="8080" 
+maxHttpHeaderSize="8192"
+maxThreads="150" 
+minSpareThreads="25" 
+maxSpareThreads="75"  
+enableLookups="false" 
+redirectPort="8443" 
+acceptCount="100" 
+connectionTimeout="20000" 
+disableUploadTimeout="true" />
+
+
+### tomcat中配置 servlet listener filter ### 
+－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－
+<servlet>
+	<description>Test HsqlDB</description>
+	<servlet-name>HSQLServlet</servlet-name>
+	<servlet-class>com.yuba.core.listeners.HSQLServlet</servlet-class>
+	<load-on-startup>1</load-on-startup>
+</servlet>
+
+<listener>
+	<listener-class>com.yuba.core.listeners.HSQLListener</listener-class>
+</listener>
+<filter>
+	<filter-name>FirstFilter</filter-name>
+	<filter-class>com.yuba.tests.FirstFilter</filter-class>
+	<init-param>
+		<param-name>targetFilterLifecycle</param-name>
+		<param-value>true</param-value>
+	</init-param>
+</filter>
+<filter-mapping>
+	<filter-name>FirstFilter</filter-name>
+	<url-pattern>/*</url-pattern>
+</filter-mapping>
+
+<resource-ref>
+	<description>mysql connection pool</description>
+	<res-ref-name>jdbc/ds_mysql</res-ref-name>
+	<res-type>javax.sql.DataSource</res-type>
+	<res-auth>Container</res-auth>
+	<res-sharing-scope>Shareable</res-sharing-scope>
+</resource-ref>
 －－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－

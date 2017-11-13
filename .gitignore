@@ -13,6 +13,11 @@
 *.tmp
 *.tmp.txt
 
+dev.*
+tmp.*
+tests.*
+notes.*
+
 ### Windows template
 Thumbs.db
 ehthumbs.db

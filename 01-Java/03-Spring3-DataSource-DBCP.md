@@ -16,8 +16,31 @@ Apache Commons DBCP可以配置为跟踪和恢复这些被弃的数据库连接�
 http://www.tomcatexpert.com/blog/2010/04/01/configuring-jdbc-pool-high-concurrency
 http://blog.csdn.net/lovebosom/article/details/54693362
 
+<Resource name="jdbc/ds_sqlserver"
+        auth="Container"
+        type="javax.sql.DataSource"
+        driverClassName="net.sourceforge.jtds.jdbc.Driver" 
+        url="jdbc:jtds:sqlserver://localhost:1433;DatabaseName=abab;"
+        username="tests"
+        password="tests"
+        initialSize="3"
+        maxActive="30"
+        maxIdle="3"
+        minIdle="1"
+        maxWait="12000"
+        removeAbandonedOnBorrow="true"
+        removeAbandonedOnMaintenance="true"
+        removeAbandonedTimeout="60"
+        removeAbandoned="true"
+        logAbandoned="true"
+        validationQuery="select 1"
+        testWhileIdle = "true"
+        timeBetweenEvictionRunsMillis="30000"
+        minEvictableIdleTimeMillis="1800000"
+        numTestsPerEvictionRun="3"
+        testOnBorrow="false" />
 
-    <Resource name="jdbc/ds_hsql50"
+<Resource name="jdbc/ds_hsql50"
         type="javax.sql.DataSource"
         factory="org.apache.tomcat.jdbc.pool.DataSourceFactory"
         driverClassName="org.hsqldb.jdbcDriver"
@@ -42,7 +65,7 @@ http://blog.csdn.net/lovebosom/article/details/54693362
         numTestsPerEvictionRun="3"
         testOnBorrow="false" />
 
-    <Resource name="jdbc/ds_h2db50"
+<Resource name="jdbc/ds_h2db50"
         type="javax.sql.DataSource"
         factory="org.apache.tomcat.jdbc.pool.DataSourceFactory"
         driverClassName="org.h2.Driver"
@@ -67,7 +90,7 @@ http://blog.csdn.net/lovebosom/article/details/54693362
         numTestsPerEvictionRun="3"
         testOnBorrow="false" />
 
-    <Resource name="jdbc/ds_hsql"
+<Resource name="jdbc/ds_hsql"
         auth="Container"
         type="javax.sql.DataSource"
         driverClassName="org.hsqldb.jdbcDriver"
@@ -91,7 +114,7 @@ http://blog.csdn.net/lovebosom/article/details/54693362
         numTestsPerEvictionRun="3"
         testOnBorrow="false" />
 
-    <Resource name="jdbc/ds_h2db"
+<Resource name="jdbc/ds_h2db"
         auth="Container"
         type="javax.sql.DataSource"
         driverClassName="org.h2.Driver"
@@ -114,6 +137,7 @@ http://blog.csdn.net/lovebosom/article/details/54693362
         minEvictableIdleTimeMillis="1800000"
         numTestsPerEvictionRun="3"
         testOnBorrow="false" />
+        
 
 BasicDataSource提供了close()方法关闭数据源，所以必须设定destroy-method=”close”属性，
  以便Spring容器关闭时，数据源能够正常关闭。除以上必须的数据源属性外，还有一些常用的属性： 
@@ -137,50 +161,48 @@ logAbandoned="true"
 注意：removeAbandonedOnMaintenance只有在timeBetweenEvictionRunsMillis设置为正数的情况下才有效。
 removeAbandonedTimeout属性是设置数据库连接被释最多空闲时间多少秒之后设置为空闲。默认移除废弃连接的时间为300秒。
 
-
-
 <Resource name="jdbc/ds_h2db"
-        auth="Container"
-        type="javax.sql.DataSource"
-        driverClassName="org.h2.Driver"
-        url="jdbc:h2:./bin/aza/h2db.db02"
-        username="tests"
-        password="tests"
-        initialSize="3"
-        maxActive="90"
-          maxIdle="3"
-          minIdle="1"
-        maxWait="12000"
-        removeAbandonedOnBorrow="true"
-        removeAbandonedOnMaintenance="true"
-        removeAbandonedTimeout="60"
-        removeAbandoned="true"
-        logAbandoned="true"
-        validationQuery="select count(1) as cnt from information_schema.tables"
-        testWhileIdle = "true"
-        timeBetweenEvictionRunsMillis="30000"
-        minEvictableIdleTimeMillis="1800000"
-        numTestsPerEvictionRun="3"
-        testOnBorrow="false" />
+    auth="Container"
+    type="javax.sql.DataSource"
+    driverClassName="org.h2.Driver"
+    url="jdbc:h2:./bin/aza/h2db.db02"
+    username="tests"
+    password="tests"
+    initialSize="3"
+    maxActive="90"
+    maxIdle="3"
+    minIdle="1"
+    maxWait="12000"
+    removeAbandonedOnBorrow="true"
+    removeAbandonedOnMaintenance="true"
+    removeAbandonedTimeout="60"
+    removeAbandoned="true"
+    logAbandoned="true"
+    validationQuery="select count(1) as cnt from information_schema.tables"
+    testWhileIdle = "true"
+    timeBetweenEvictionRunsMillis="30000"
+    minEvictableIdleTimeMillis="1800000"
+    numTestsPerEvictionRun="3"
+    testOnBorrow="false" />
 
 <Resource name="jdbc/xds_h2db"
-        auth="Container"
-        factory="org.apache.tomcat.jdbc.pool.DataSourceFactory"
-        type="javax.sql.DataSource"
-        driverClassName="org.h2.Driver"
-        url="jdbc:h2:./bin/aza/h2db.db03"
-        username="tests"
-        password="tests"
-        maxActive="150"
-        maxIdle="3"
-        maxWait="15000"
-        removeAbandoned="true"
-        removeAbandonedTimeout="60"
-        validationQuery="select 1" 
-        logAbandoned="true"
-        testOnBorrow="true" />
+    auth="Container"
+    factory="org.apache.tomcat.jdbc.pool.DataSourceFactory"
+    type="javax.sql.DataSource"
+    driverClassName="org.h2.Driver"
+    url="jdbc:h2:./bin/aza/h2db.db03"
+    username="tests"
+    password="tests"
+    maxActive="150"
+    maxIdle="3"
+    maxWait="15000"
+    removeAbandoned="true"
+    removeAbandonedTimeout="60"
+    validationQuery="select 1" 
+    logAbandoned="true"
+    testOnBorrow="true" />
 
-<Resource name="jdbc/TestDB"
+<Resource name="jdbc/ds_mydb"
     type="javax.sql.DataSource"
     factory="org.apache.tomcat.jdbc.pool.DataSourceFactory"
     driverClassName="com.mysql.jdbc.Driver"
@@ -195,7 +217,7 @@ removeAbandonedTimeout属性是设置数据库连接被释最多空闲时间多�
     timeBetweenEvictionRunsMillis="30000"
     minEvictableIdleTimeMillis="60000" />
 
-<Resource name="jdbc/TestDB1"
+<Resource name="jdbc/ds_mydb1"
     auth="Container"
     factory="org.apache.tomcat.jdbc.pool.DataSourceFactory"
     dataSourceJNDI="DerbyXA1" 
@@ -242,27 +264,27 @@ removeAbandonedTimeout属性是设置数据库连接被释最多空闲时间多�
     numTestsPerEvictionRun="3"
     testOnBorrow="false" />
 
-
 <Resourcename="jdbc/MyXA1" 
     factory="org.apache.tomcat.jdbc.naming.GenericNamingResourcesFactory"
     type="oracle.jdbc.xa.client.OracleXADataSource"
     url="jdbc:oracle:thin:@168.1.50.20:1522:orcl"
     username="scott"
     password="scott" />
-
-<Resource name="jdbc/TestDB"
+    
+<Resource name="jdbc/ds_mydb"
     dataSourceJNDI="MyXA1"
     factory="org.apache.tomcat.jdbc.pool.DataSourceFactory"
     type="javax.sql.XADataSource"
     username="scott"
     password="scott"/>
 
+
  
  <!-- Tomcat JDBC连接池配置示例，自动检查连接的可用性，dbcp定时检测连接，dbcp自动重连的配置
-	   JNDI数据源的name，查找时用：java:comp/env/jdbc/TestDB -->
+	   JNDI数据源的name，查找时用：java:comp/env/jdbc/ds_mydb -->
 
 <Resource
-    name="jdbc/TestDB"
+    name="jdbc/ds_mydb"
     type="javax.sql.DataSource"
     factory="org.apache.tomcat.dbcp.dbcp.BasicDataSourceFactory"
     driverClassName="com.mysql.jdbc.Driver"
@@ -283,7 +305,7 @@ removeAbandonedTimeout属性是设置数据库连接被释最多空闲时间多�
     removeAbandoned="true"		连接泄漏回收参数，当可用连接数少于3个时才执行
     removeAbandonedTimeout="180" />  连接泄漏回收参数，180秒，泄露的连接可以被删除的超时值
 
-<Resource name="jdbc/TestDB"
+<Resource name="jdbc/ds_mydb"
     auth="Container"
     factory="org.apache.tomcat.jdbc.pool.DataSourceFactory"
     type="javax.sql.DataSource"
@@ -293,7 +315,7 @@ removeAbandonedTimeout属性是设置数据库连接被释最多空闲时间多�
     url="jdbc:oracle:thin:@168.1.51.21:1522:orcl"
     />
 
-<Resource name="jdbc/testDB"       //指定的jndi名称，会用于spring数据源bean的配置和ResourceLink的配置
+<Resource name="jdbc/ds_mydb"       //指定的jndi名称，会用于spring数据源bean的配置和ResourceLink的配置
     type="javax.sql.DataSource"   //数据源类型，使用标准的javax.sql.DataSource
     driverClassName="com.mysql.jdbc.Driver"    //JDBC驱动器
     url="jdbc:mysql://localhost:3306/test" //数据库URL地址
@@ -307,7 +329,7 @@ removeAbandonedTimeout属性是设置数据库连接被释最多空闲时间多�
     logAbandoned="true" //被丢弃的数据库连接是否做记录，以便跟踪
     factory="org.apache.tomcat.dbcp.dbcp.BasicDataSourceFactory" />
 
-<Resource name="jdbc/testDB"  //指定的jndi名称，会用于spring数据源bean的配置和ResourceLink的配置
+<Resource name="jdbc/ds_mydb"  //指定的jndi名称，会用于spring数据源bean的配置和ResourceLink的配置
     type="javax.sql.DataSource"   //数据源类型，使用标准的javax.sql.DataSource
     factory="org.apache.tomcat.dbcp.dbcp.BasicDataSourceFactory"
     driverClassName="com.mysql.jdbc.Driver"    //JDBC驱动器
@@ -329,7 +351,7 @@ minIdle=10  连接池中存在的最小连接数目。连接池中连接数目�
 maxIdle属性有一点麻烦。它的不同的行为取决于是否使用了pool sweeper。pool sweeper是一个可以在连接池正在使用的时候测试空闲连接和重置连接池大小的后台线程。还负责检测连接泄露。
 
 <Resource type="javax.sql.DataSource"
-    name="jdbc/TestDB"
+    name="jdbc/ds_mydb"
     factory="org.apache.tomcat.jdbc.pool.DataSourceFactory"
     driverClassName="com.mysql.jdbc.Driver"
     url="jdbc:mysql://localhost:3306/mysql"
@@ -341,7 +363,7 @@ maxIdle属性有一点麻烦。它的不同的行为取决于是否使用了pool
     removeAbandonedTimeout="60"
     logAbandoned="true"  />
 
-<Resource name="jdbc/TestDB" auth="Container"
+<Resource name="jdbc/ds_mydb" auth="Container"
     type="javax.sql.DataSource"
     description="Oracle Datasource"
     url="jdbc:oracle:thin:@//localhost:1521/orcl"
@@ -355,7 +377,7 @@ maxIdle属性有一点麻烦。它的不同的行为取决于是否使用了pool
     initSQL="ALTER SESSION SET NLS_DATE_FORMAT = 'YYYY MM DD HH24:MI:SS'"/>
 
 <Resource type="javax.sql.DataSource"
-    name="jdbc/TestDB"
+    name="jdbc/ds_mydb"
     factory="org.apache.tomcat.jdbc.pool.DataSourceFactory"
     driverClassName="com.mysql.jdbc.Driver"
     url="jdbc:mysql://localhost:3306/mysql"

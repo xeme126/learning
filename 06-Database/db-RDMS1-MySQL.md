@@ -1,14 +1,36 @@
 
 ### url="jdbc:mysql://localhost:3306/test?useUnicode=true&amp;characterEncoding=UTF-8"
 
-
-
-### 设置区分大小写 0：区分 1：不区分
+# 设置区分大小写 0：区分 1：不区分
 lower_case_table_names = 0
 default-character-set  =  utf8
 
 
-### 详解 MySQL 基准测试和 sysbench 工具
+<Resource name="jdbc/ds_mysql"
+        type="javax.sql.DataSource" 
+        factory="org.apache.tomcat.jdbc.pool.DataSourceFactory"
+        driverClassName="com.mysql.jdbc.Driver"
+        url="jdbc:mysql://localhost:3306/test?useUnicode=true&amp;characterEncoding=UTF-8"
+        username="tests"
+        password="tests"
+        initialSize="10"
+        maxActive="100"
+        maxIdle="50"
+        minIdle="3"
+        removeAbandonedOnBorrow="true"
+        removeAbandonedOnMaintenance="true"
+        removeAbandonedTimeout="60"
+        removeAbandoned="true"
+        logAbandoned="true"
+        validationQuery="select 1"
+        testWhileIdle = "true"
+        timeBetweenEvictionRunsMillis="30000"
+        minEvictableIdleTimeMillis="1800000"
+        numTestsPerEvictionRun="3"
+        testOnBorrow="false" /> 
+        
+
+# 详解 MySQL 基准测试和 sysbench 工具
 一、基准测试简介
 1、什么是基准测试
 

@@ -42,3 +42,28 @@ select * from information_schema.views
 select count(1) as cnt from information_schema.tables
 select count(1) as cnt from information_schema.views
 
+
+
+//org.hsqldb.jdbc.JDBCDataSource
+//org.hsqldb.jdbc.pool.JDBCXADataSource
+//org.hsqldb.jdbc.pool.JDBCPooledDataSource
+//org.hsqldb.jdbc.pool.JDBCPooledDataSource
+//JDBCDataSource ds = new JDBCDataSource();
+//JDBCPooledDataSource ds = new JDBCPooledDataSource();
+//H2 	H2 	org.h2.jdbcx.JdbcDataSource
+//HSQLDB 	HSQLDB 	org.hsqldb.jdbc.JDBCDataSource
+//dataSource.url=jdbc:hsqldb:file:./bin/afa/hsql.db3
+//dataSource.user=tests
+//dataSource.password=tests
+
+JDBCPooledDataSource ds = new JDBCPooledDataSource();
+ds.setUrl("jdbc:hsqldb:file:./bin/afa/hsql.db3");
+ds.setUser("tests");
+ds.setPassword("tests");		
+Context ctx;
+try {
+ctx = new InitialContext();
+ctx.bind("jdbc/ds_h2db", ds);
+} catch (NamingException e) { 
+e.printStackTrace();
+}

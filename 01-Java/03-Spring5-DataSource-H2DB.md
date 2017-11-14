@@ -45,6 +45,42 @@ select count(1) as cnt from information_schema.tables
 select count(1) as cnt from information_schema.views
 
 
+http://blog.csdn.net/guicaizhou/article/details/51859500
 
+//org.h2.jdbcx.JdbcDataSourceFactory
+//org.h2.jdbcx.JdbcConnectionPool
+//org.h2.jdbcx.JdbcDataSource
+//H2 	H2 	org.h2.jdbcx.JdbcDataSource
+//HSQLDB 	HSQLDB 	org.hsqldb.jdbc.JDBCDataSource
+//		ds.getPooledConnection();
+//		dataSource.url=jdbc:h2:./bin/afa/h2db.db2
+//		dataSource.user=tests
+//		dataSource.password=tests
+
+org.h2.jdbcx.JdbcDataSource ds = new org.h2.jdbcx.JdbcDataSource();
+ds.setURL("jdbc:h2:./bin/afa/h2db.db2");
+ds.setUser("tests");
+ds.setPassword("tests");
+
+Context ctx;
+try {
+ctx = new InitialContext();
+ctx.bind("jdbc/ds_h2db", ds);
+} catch (NamingException e) { 
+e.printStackTrace();
+}
+
+
+连接内嵌模式的数据库
+"jdbc:h2:file:D:/test"  连接自定目录下的指定数据库
+"jdbc:h2:~/test" 连接默认目录下的指定数据库
+连接内存模式的数据库
+jdbc:h2:mem:test
+连接server模式的数据库
+jdbc:h2:tcp://localhost/~/test
+ssl连接数据库
+jdbc:h2:ssl://localhost/~/test
+连接压缩文件内的数据库
+jdbc:h2:zip:D:/test.zip!/test 
 
 

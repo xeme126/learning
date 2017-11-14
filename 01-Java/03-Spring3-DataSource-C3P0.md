@@ -18,7 +18,6 @@
   <version>0.2.11</version>
 </dependency>
 
-
 <dependency>
   <groupId>com.mchange</groupId>
   <artifactId>mchange-commons-java</artifactId>
@@ -47,21 +46,30 @@ ds.setMaxPoolSize(6);
 ds.setMaxIdleTime(3000);
 
 
-
-十一月 13, 2017 10:59:34 上午 org.apache.catalina.loader.WebappClassLoaderBase clearReferencesJdbc
-严重: The web application [] registered the JDBC driver [org.hsqldb.jdbc.JDBCDriver] but failed to unregister it when the web application was stopped. To prevent a memory leak, the JDBC Driver has been forcibly unregistered.
-十一月 13, 2017 10:59:34 上午 org.apache.catalina.loader.WebappClassLoaderBase clearReferencesJdbc
-严重: The web application [] registered the JDBC driver [net.sf.log4jdbc.DriverSpy] but failed to unregister it when the web application was stopped. To prevent a memory leak, the JDBC Driver has been forcibly unregistered.
-十一月 13, 2017 10:59:34 上午 org.apache.catalina.loader.WebappClassLoaderBase clearReferencesJdbc
-严重: The web application [] registered the JDBC driver [org.h2.Driver] but failed to unregister it when the web application was stopped. To prevent a memory leak, the JDBC Driver has been forcibly unregistered.
-十一月 13, 2017 10:59:34 上午 org.apache.catalina.loader.WebappClassLoaderBase clearReferencesThreads
-严重: The web application [] appears to have started a thread named [Timer-0] but has failed to stop it. This is very likely to create a memory leak.
-十一月 13, 2017 10:59:34 上午 org.apache.catalina.loader.WebappClassLoaderBase clearReferencesThreads
-严重: The web application [] appears to have started a thread named [com.mchange.v2.async.ThreadPoolAsynchronousRunner$PoolThread-#0] but has failed to stop it. This is very likely to create a memory leak.
-十一月 13, 2017 10:59:34 上午 org.apache.catalina.loader.WebappClassLoaderBase clearReferencesThreads
-严重: The web application [] appears to have started a thread named [com.mchange.v2.async.ThreadPoolAsynchronousRunner$PoolThread-#1] but has failed to stop it. This is very likely to create a memory leak.
-十一月 13, 2017 10:59:34 上午 org.apache.catalina.loader.WebappClassLoaderBase clearReferencesThreads
-严重: The web application [] appears to have started a thread named [com.mchange.v2.async.ThreadPoolAsynchronousRunner$PoolThread-#2] but has failed to stop it. This is very likely to create a memory leak.
-十一月 13, 2017 10:59:34 上午 org.apache.catalina.loader.WebappClassLoaderBase clearReferencesThreads
-严重: The web application [] appears to have started a thread named [HSQLDB Timer @119d341] but has failed to stop it. This is very likely to create a memory leak.
+<Resource name="jdbc/ds_h2db"
+       auth="Container"
+       type="com.mchange.v2.c3p0.ComboPooledDataSource"
+       factory="org.apache.naming.factory.BeanFactory"
+       driverClass="org.h2.Driver"
+       jdbcUrl="jdbc:h2:data02/h2bz05"
+       user="tests"
+       password="tests"
+       initialPoolSize="3"
+       maxPoolSize="60"
+       minPoolSize="3"
+       acquireIncrement="3"
+       maxStatements="300"
+       checkoutTimeout="3000"
+       propertyCycle="1"
+       maxConnectionAge="10"
+       numHelperThreads="10"
+       maxIdleTime="2"
+       maxIdleTimeExcessConnections="1"
+       idleConnectionTestPeriod="5"
+       unreturnedConnectionTimeout="15"
+       maxStatementsPerConnection="5"
+       maxAdministrativeTaskTime="3"
+       preferredTestQuery="select 1"
+       acquireRetryDelay="1000"
+       acquireRetryAttempts="60" />
 

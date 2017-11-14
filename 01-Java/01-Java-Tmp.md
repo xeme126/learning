@@ -2,6 +2,7 @@
 import org.slf4j.Logger; 
 private static final Logger LOG = LoggerFactory.getLogger(Test.class);   
 
+<%@ page language="java" pageEncoding="UTF-8"%>
 
 ### jdbc直连mysql ###
  public static void testJdbc2MySQL() throws Exception {
@@ -68,13 +69,26 @@ http://blog.csdn.net/zhouhuan965/article/details/6258087
   }
   
 
-  jdbc:jtds:sqlserver://localhost:1433/dbname;user=username;password=s3cr3t
+<servlet>
+	<servlet-name>MyTimerTaskListener</servlet-name>
+	<servlet-class>com.yuba.core.pubs.MyTimerTaskListener</servlet-class>
+	<init-param>
+		<param-name>state</param-name>
+		<param-value>1</param-value>
+	</init-param>
+	<init-param>
+		<param-name>delay</param-name>
+		<param-value>5</param-value>
+	</init-param>
+	<load-on-startup>2</load-on-startup>
+</servlet>
 
-  String url = "jdbc:sqlserver://127.0.0.1:1368;databaseName=mydb;user=sa;password=qiaoning";// sa身份连接
-  String url2 = "jdbc:sqlserver://127.0.0.1:1368;databaseName=mydb;integratedSecurity=true;";// windows集成模式连接
-  String driver = "com.microsoft.sqlserver.jdbc.SQLServerDriver";
-  // String url ="jdbc:sqlserver://192.168.0.74;databaseName=wakeup";
-  String sDBUrl = "jdbc:sqlserver://192.168.2.28\\JONSE;databaseName=wakeup";
+
+  String url = "jdbc:sqlserver://127.0.0.1:1368;databaseName=mydb;user=sa;password=tests";// sa身份连接
+  String url = "jdbc:sqlserver://127.0.0.1:1368;databaseName=mydb;integratedSecurity=true;";// windows集成模式连接
+  String url ="jdbc:jtds:sqlserver://localhost:1433/dbname;user=tests;password=tests";
+  String url = "jdbc:sqlserver://localhost\\JONSE;databaseName=yourdb";
+  String driver = "com.microsoft.sqlserver.jdbc.SQLServerDriver";  
   Class.forName(driver);
   conn = DriverManager.getConnection(sDBUrl, usr, pwd);
   conn.close();
@@ -85,7 +99,7 @@ http://blog.csdn.net/zhouhuan965/article/details/6258087
  
   Class.forName("net.sourceforge.jtds.jdbc.Driver");
   String url="jdbc:jtds:sqlserver://localhost:1433/abab;tds=8.0;lastupdatecount=true;integratedSecurity=true;";
-  Connection conn = DriverManager.getConnection(url); //(url, null, null)
+  Connection conn = DriverManager.getConnection(url);
   Statement stmt = conn.createStatement();
   String query = "select GETDATE(), SUSER_SID() ";
   ResultSet rs=stmt.executeQuery(query);

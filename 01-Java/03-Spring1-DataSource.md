@@ -142,5 +142,3 @@ destroy-method="close">
 <bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
     <property name="dataSource" ref="dataSource" />
 </bean>
-  
-    

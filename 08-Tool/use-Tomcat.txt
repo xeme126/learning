@@ -2,8 +2,85 @@
 
 http://www.blogjava.net/zhouf/articles/432234.html
 
+
+### jdk-1.7.0_80 JAAVA_OPTS ###
+-Dmaven.multiModuleProjectDirectory -Xms128m -Xmx960m -XX:MaxPermSize=160m
+
+### Tomcat 8.5.23 conf/server.xml 虚拟目录配置 ###
+<Context path="" docBase="E:/MavenTests/target/tests" reloadable="false" crossContext="false" />
+
+### Tomcat 8.5.23 conf/context.xml 数据源配置 ###
+    <Resource name="jdbc/ds_hsql"
+        auth="Container"
+        type="javax.sql.DataSource"
+        driverClassName="org.hsqldb.jdbcDriver"
+        url="jdbc:hsqldb:file:./bin/abe/dbhs"
+        username="tests"
+        password="tests"
+        initialSize="2"
+        maxTotal="16"
+        maxIdle="8"
+        minIdle="2"
+        maxWaitMillis="30000"
+        removeAbandonedOnBorrow="false"
+        removeAbandonedOnMaintenance="false"
+        removeAbandonedTimeout="60"
+        logAbandoned="true"
+        testWhileIdle = "true"
+        validationQuery="select count(1) as cnt from information_schema.tables"
+        timeBetweenEvictionRunsMillis="30000"
+        minEvictableIdleTimeMillis="1800000"
+        numTestsPerEvictionRun="3"
+        testOnBorrow="false" />
+
+    <Resource name="jdbc/ds_h2db"
+        auth="Container"
+        type="javax.sql.DataSource"
+        driverClassName="org.h2.Driver"
+        url="jdbc:h2:./bin/abe/dbh2"
+        username="tests"
+        password="tests"
+        initialSize="2"
+        maxTotal="16"
+        maxIdle="8"
+        minIdle="2"
+        maxWaitMillis="30000"
+        removeAbandonedOnBorrow="false"
+        removeAbandonedOnMaintenance="false"
+        removeAbandonedTimeout="60"
+        logAbandoned="true"
+        testWhileIdle = "true"
+        validationQuery="select 1"
+        timeBetweenEvictionRunsMillis="30000"
+        minEvictableIdleTimeMillis="1800000"
+        numTestsPerEvictionRun="3"
+        testOnBorrow="false" />
+
+    <Resource name="jdbc/ds_sqlms"
+        auth="Container"
+        type="javax.sql.DataSource"
+        driverClassName="net.sourceforge.jtds.jdbc.Driver"
+        url="jdbc:jtds:sqlserver://localhost:1433;DatabaseName=abab;"
+        username="tests"
+        password="tests"
+        initialSize="2"
+        maxTotal="16"
+        maxIdle="8"
+        minIdle="2"
+        maxWaitMillis="30000"
+        removeAbandonedOnBorrow="false"
+        removeAbandonedOnMaintenance="false"
+        removeAbandonedTimeout="60"
+        logAbandoned="true"
+        testWhileIdle = "true"
+        validationQuery="select 1 "
+        timeBetweenEvictionRunsMillis="30000"
+        minEvictableIdleTimeMillis="1800000"
+        numTestsPerEvictionRun="3"
+        testOnBorrow="false" />
+
 ### 配置tomcat虚拟目录  ###
-<Context path="" docBase="E:/0AVMS/MavenSpringTests/target/tests" reloadable="false" crossContext="false" />
+<Context path="" docBase="E:/MavenSpringTests/target/tests" reloadable="false" crossContext="false" />
 
 ### 配置tomcat管理用户 ###
 编辑文件conf/tomcat-users.xml 按需增减如下

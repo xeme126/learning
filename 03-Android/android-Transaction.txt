@@ -1,6 +1,3 @@
-### Eclipse正则
-^[0-9]+[\n\r]+
-
 db.beginTransaction();
 xxxx….
 db.setTransactionSuccessful();

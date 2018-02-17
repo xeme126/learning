@@ -1,33 +1,7 @@
 
-###SQLite3自增字段### 
-create table if not exists ttb01 (kid integer primary key autoincrement , kws varchar(50) unique, kvs varchar(50)); 
-update myUser set users=users||"-"||passw where users = ? ;
-
-###H2DB自增字段### 
-create table tba userid bigint auto_increment primary key, users varchar(32), passw varchar(32)); 
-select last_insert_rowid(); 
-###HSQLDB自增字段### 
-create table tba (kid INTEGER NOT NULL PRIMARY KEY IDENTITY, kws varchar(30), kvs varchar(30) ); 
-create table tbb (kid BIGINT NOT NULL PRIMARY KEY IDENTITY, kws varchar(30), kvs varchar(30) ); 
-###HSQLDB自增字段### 
-create table tba (kid INTEGER NOT NULL PRIMARY KEY IDENTITY, kws varchar(30), kvs varchar(30) ); 
-create table tbb (kid BIGINT NOT NULL PRIMARY KEY IDENTITY, kws varchar(30), kvs varchar(30) ); 
-
-###SQL2000自增字段### 
-create table tba (userid integer identity(1,1) PRIMARY KEY, users varchar(32), passw varchar(32)); 
-###SQLite3自增字段### 
-create table if not exists tba (kid integer primary key autoincrement , kws varchar(50), kvs varchar(50)); 
-###MySQL5自增字段### 
-create table tba (userid bigint auto_increment primary key, users varchar(32), passw varchar(32)) 
-ENGINE=InnoDB DEFAULT CHARSET=utf8 ; 
-ENGINE=MyISAM DEFAULT CHARSET=utf8 
-### MYSQL5 自增字段 ### 
-create table if not exists tba (userid integer auto_increment primary key, users varchar(32), passw varchar(32)) 
-ENGINE=InnoDB DEFAULT CHARSET=utf8 ; 
-
-h2,mysql支持 select last_insert_id(); 
-### MYSQL5导入数据 ### 
-load data local infile 'E:\\dns\\rite\\20141217-rdns.txt' into table dns fields terminated by ','; 
+-Djava.net.preferIPv4Stack=true -Djava.awt.headless=true  -Xms256m -Xmx1280m -XX:PermSize=64m   -XX:MaxPermSize=128m
+-Djava.net.preferIPv4Stack=true -Djava.awt.headless=true  -Xms256m -Xmx1280m -XX:PermSize=128m -XX:MaxPermSize=128m
+-XX:PermSize=64M -XX:MaxPermSize=64M -verbose -verbose:gc-XX:+UseConcMarkSweepGC -XX:+CMSClassUnloadingEnabled
 
 
 ###在Tomcat6.x 7.x目录中
@@ -86,12 +60,38 @@ conf/context.xml文件设置数据源如
        testOnBorrow="true"
        logAbandoned="true" /> 
        
-       
+<!--配置oracle数据库的连接池-->
+    <Resource name="jdbc/oracleds"
+        author="Container"
+        type="javax.sql.DataSource"
+        maxActive="100"
+        maxIdle="30"
+        maxWait="10000"
+        username="scott"
+        password="tiger"
+        driverClassName="oracle.jdbc.dirver.OracleDriver"
+        url="jdbc:oracle:thin:@127.0.0.1:1521:ora9" />
+
+    <!--配置mysql数据库的连接池,需要做的额外步骤是将mysql的Java驱动类放到tomcat的lib目录下        
+        maxIdle 连接池中最多可空闲maxIdle个连接 
+        minIdle 连接池中最少空闲maxIdle个连接 
+        initialSize 初始化连接数目 
+        maxWait 连接池中连接用完时,新的请求等待时间,毫秒 
+        username 数据库用户名
+        password 数据库密码
+        -->
+    <Resource name="jdbc/mysqlds" 
+        auth="Container" 
+        type="javax.sql.DataSource" 
+        username="root" 
+        password="root" 
+        maxIdle="30" 
+        maxWait="10000" 
+        maxActive="100"
+        driverClassName="com.mysql.jdbc.Driver"
+        url="jdbc:mysql://127.0.0.1:3306/db_blog" />
 
 https://letsencrypt.org/howitworks/technology/
--Djava.net.preferIPv4Stack=true -Djava.awt.headless=true  -Xms256m -Xmx1280m -XX:PermSize=64m   -XX:MaxPermSize=128m
--Djava.net.preferIPv4Stack=true -Djava.awt.headless=true  -Xms256m -Xmx1280m -XX:PermSize=128m -XX:MaxPermSize=128m
--XX:PermSize=64M -XX:MaxPermSize=64M -verbose -verbose:gc-XX:+UseConcMarkSweepGC -XX:+CMSClassUnloadingEnabled
 
 ### Tomcat8 context.xml数据源 ###
      <Resource name="jdbc/ds_sqlserver"
@@ -998,6 +998,115 @@ load data local infile 'E:\\dns\\rite\\20141217-rdns.txt' into table dns fields 
          logAbandoned="true" />
 
 
+ <bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
+        <property name="driverClassName" value="${driver}" />
+        <property name="url" value="${url}" />
+        <property name="username" value="${username}" />
+        <property name="password" value="${password}" />
+        <!-- 初始化连接大小 -->
+        <property name="initialSize" value="${initialSize}" />
+        <!-- 连接池最大数量 -->
+        <property name="maxActive" value="${maxActive}" />
+        <!-- 连接池最大空闲 -->
+        <property name="maxIdle" value="${maxIdle}" />
+        <!-- 连接池最小空闲 -->
+        <property name="minIdle" value="${minIdle}" />
+        <!-- 获取连接最大等待时间 -->
+        <property name="maxWait" value="${maxWait}" />
+    </bean>
+
+
+在启动tomcat的时候发现日志里有这么个奇怪的东西: 
+信息: The APR based Apache Tomcat Native library which allows optimal performance in production environments was not found on the java.library.path: 
+C:\Program Files\Java\jre1.6.0_05\bin;D:\java\apache-tomcat-6.0.16\bin实际上是tomcat建议使用apache的apr, 
+解决办法：是把tcnative-1.dll文件放至 Tomcat 6.0\bin 目录下,链接地址:http://tomcat.heanet.ie/native/1.1.10/binaries/win32/tcnative-1.dll
+
+http://tomcat.heanet.ie/native/1.1.3/binaries/win64/amd64/tcnative-1.dll  放到tomcat/bin下即不出现如下提示
+信息: The APR based Apache Tomcat Native library which allows optimal performance in production environments was not found on the java.library.path: D:\Java\jdk1.7.0_80\bin;C:\Windows\Sun\Java\bin;C:\Windows\system32;C:\Windows;D:\Java\jdk1.7.0_80\jre\bin;D:/Java/jdk1.7.0_80/bin/../jre/bin/server;D:/Java/jdk1.7.0_80/bin/../jre/bin;D:/Java/jdk1.7.0_80/bin/../jre/lib/amd64;C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem;C:\Windows\System32\WindowsPowerShell\v1.0\;D:\Java\jdk1.7.0_80\bin;.;C:\Program Files (x86)\Microsoft SQL Server\100\Tools\Binn\;C:\Program Files\Microsoft SQL Server\100\Tools\Binn\;C:\Program Files\Microsoft SQL Server\100\DTS\Binn\;D:\Java\eclipse-java-mars\eclipse;;.
+
+ 
+ 
+     <Resource name="jdbc/ds_sqlserver"
+         auth="Container"
+         type="javax.sql.DataSource"
+         driverClassName="net.sourceforge.jtds.jdbc.Driver"
+         url=" jdbc:jtds:<server_type>://<server>[:<port>][/<database>][;<property>=<value>[;...]]"
+         url="jdbc:jtds:sqlserver://localhost:1433;DatabaseName=abab"
+         username="tests"
+         password="tests"
+         maxActive="20"
+         maxIdle="3"
+         maxWait="12000"
+         validationQuery="select 1 "
+         removeAbandoned="true"
+         removeAbandonedTimeout="60"
+         testOnBorrow="true"
+         logAbandoned="true" />
+
+ <Resource name="jdbc/ds_sqlite"
+         auth="Container"
+         type="javax.sql.DataSource"
+         driverClassName="org.sqlite.JDBC"
+         url="jdbc:sqlite:bin/sqlite3.db"
+         username="tests"
+         password="tests"
+         maxActive="20"
+         maxIdle="3"
+         maxWait="12000"
+         validationQuery="select 1 "
+         removeAbandoned="true"
+         removeAbandonedTimeout="60"
+         testOnBorrow="true"
+         logAbandoned="true" />
+
+<Resource name="jdbc/ds_mysql"
+         auth="Container"
+         type="javax.sql.DataSource"
+         driverClassName="net.sf.log4jdbc.DriverSpy"
+         url="jdbc:log4jdbc:mysql://localhost:3306/yuba.testsDb6?useUnicode=true&amp;characterEncoding=UTF-8"
+         username="tests"
+         password="tests"
+         maxActive="120"
+         maxIdle="3"
+         maxWait="12000"
+         removeAbandoned="true"
+         removeAbandonedTimeout="60"
+         validationQuery="select 1"
+         testOnBorrow="true"
+         logAbandoned="true" />
+
+     <Resource name="jdbc/ds_hsql"
+         auth="Container"
+         type="javax.sql.DataSource"
+         driverClassName="net.sf.log4jdbc.DriverSpy"
+         url="jdbc:log4jdbc:hsqldb:file:bin/a0/hsql00"
+         username="tests"
+         password="tests"
+         maxActive="20"
+         maxIdle="3"
+         maxWait="12000"
+         validationQuery="select count(1) as cnt from information_schema.views"
+         removeAbandoned="true"
+         removeAbandonedTimeout="60"
+         testOnBorrow="true"
+         logAbandoned="true" />
+
+     <Resource name="jdbc/ds_h2db"
+         auth="Container"
+         type="javax.sql.DataSource"
+         driverClassName="net.sf.log4jdbc.DriverSpy"
+         url="jdbc:log4jdbc:h2:bin/b0/h2db00"
+         username="tests"
+         password="tests"
+         maxActive="30"
+         maxIdle="2"
+         maxWait="12000"
+         removeAbandoned="true"
+         removeAbandonedTimeout="60"
+         validationQuery="select 1"
+         testOnBorrow="true"
+         logAbandoned="true" />
+
 1.限制返回的行数
 ＝＝DB2＝＝
 select * from t_biz_user fetch first 5 rows only
@@ -1048,342 +1157,4 @@ gbak -c -r -v -user SYSDBA -password masterkey c:\backups\warehouse.fbk dbserver
 回存一个只读的数据库:
 gbak -c -v -mode read_only -use_all_space -user SYSDBA -password masterkey c:\backups\warehouse.fbk c:\files\warehousedb.fdb
 
-
-### jdbc直连mysql ###
- public static void testJdbc2MySQL() throws Exception {
-  Class.forName("com.mysql.jdbc.Driver");
-  String url="jdbc:mysql://192.168.222.133:3306/test?user=tests&password=tests";
-  Connection conn = DriverManager.getConnection(url);
-  Statement stmt = conn.createStatement();
-  String query = "select current_date as fa, current_timestamp as fb "; //"select * from test";
-  ResultSet rs=stmt.executeQuery(query);
-  while(rs.next()) System.err.println("@@@ "+rs.getString(1)+" ### "+rs.getString(2));
-  rs.close();
-  stmt.close();
-  conn.close();
- }
-
-
-### jdbc[odbc]直连sqlexpress ###
-http://blog.csdn.net/zhouhuan965/article/details/6258087
- public static void testOdbc2SQLEXPRESS() throws Exception {
-  Class.forName("sun.jdbc.odbc.JdbcOdbcDriver");
-  String url = "jdbc:odbc:myDSN";
-  //Class.forName("net.sourceforge.jtds.jdbc.Driver");
-  //String url="jdbc:jtds:sqlserver://localhost:1433/abab;tds=8.0;lastupdatecount=true;integratedSecurity=true;";
-  Connection conn = DriverManager.getConnection(url); //(url, null, null)
-  Statement stmt = conn.createStatement();
-  String query = "select user, GETDATE(), SUSER_SID() ";
-  ResultSet rs=stmt.executeQuery(query);
-  while(rs.next()) System.err.println("@@@ "+rs.getString(1)+" ### "+rs.getString(2));
-  rs.close();
-  stmt.close();
-  conn.close();
- }
-
-
-
-### jdbc[jtds]直连sqlexpress ###
- //先将jtds-1.3.1-dist.zip\x86\SSO\ntlmauth.dll放入jdk目录jre/bin/下
- public static void testJdbc2SQLEXPRESS() throws Exception {
-  Class.forName("net.sourceforge.jtds.jdbc.Driver");
-  String url="jdbc:jtds:sqlserver://localhost:1433/abab;integratedSecurity=true;";
-  String url="jdbc:jtds:sqlserver://localhost:1433/abab;tds=8.0; lastupdatecount=true;integratedSecurity=true;";
-  
-  Connection conn = DriverManager.getConnection(url); //(url, null, null)
-  Statement stmt = conn.createStatement();
-  String query = "select GETDATE(), SUSER_SID() ";
-  ResultSet rs=stmt.executeQuery(query);
-  while(rs.next()) System.err.println("@@@ "+rs.getString(1)+" ### "+rs.getString(2));
-  rs.close();
-  stmt.close();
-  conn.close();
- }
-
-  String driver = "com.microsoft.sqlserver.jdbc.SQLServerDriver"; 
-  String url = "jdbc:sqlserver://localhost:1433; DatabaseName=sample";
-  String usr = "sa";
-  String pwd = "123456";
-  Connection conn;
-  try {
-   Class.forName(driver);
-   conn = DriverManager.getConnection(url, usr, pwd);
-   System.out.println("Connection Successful!");
-   conn.close();
-  } catch (Exception ex) {
-   ex.printStackTrace();
-  }
-  
-
-  jdbc:jtds:sqlserver://localhost:1433/dbname;user=username;password=s3cr3t
-
-  String url = "jdbc:sqlserver://127.0.0.1:1368;databaseName=mydb;user=sa;password=qiaoning";// sa身份连接
-  String url2 = "jdbc:sqlserver://127.0.0.1:1368;databaseName=mydb;integratedSecurity=true;";// windows集成模式连接
-  String driver = "com.microsoft.sqlserver.jdbc.SQLServerDriver";
-  // String url ="jdbc:sqlserver://192.168.0.74;databaseName=wakeup";
-  String sDBUrl = "jdbc:sqlserver://192.168.2.28\\JONSE;databaseName=wakeup";
-  Class.forName(driver);
-  conn = DriverManager.getConnection(sDBUrl, usr, pwd);
-  conn.close();
-  String driver = "net.sourceforge.jtds.jdbc.Driver";
-  String url = "jdbc:jtds:sqlserver://BHX:1433/Forecast;instance=SQLEPXRESS";
-  java.sql.Connection con = DriverManager.getConnection(url);
-  conn.close();
- 
-  Class.forName("net.sourceforge.jtds.jdbc.Driver");
-  String url="jdbc:jtds:sqlserver://localhost:1433/abab;tds=8.0;lastupdatecount=true;integratedSecurity=true;";
-  Connection conn = DriverManager.getConnection(url); //(url, null, null)
-  Statement stmt = conn.createStatement();
-  String query = "select GETDATE(), SUSER_SID() ";
-  ResultSet rs=stmt.executeQuery(query);
-  while(rs.next()) System.err.println("@@@ "+rs.getString(1)+" ### "+rs.getString(2));
-  rs.close();
-  stmt.close();
-  conn.close();
-
- <bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
-        <property name="driverClassName" value="${driver}" />
-        <property name="url" value="${url}" />
-        <property name="username" value="${username}" />
-        <property name="password" value="${password}" />
-        <!-- 初始化连接大小 -->
-        <property name="initialSize" value="${initialSize}" />
-        <!-- 连接池最大数量 -->
-        <property name="maxActive" value="${maxActive}" />
-        <!-- 连接池最大空闲 -->
-        <property name="maxIdle" value="${maxIdle}" />
-        <!-- 连接池最小空闲 -->
-        <property name="minIdle" value="${minIdle}" />
-        <!-- 获取连接最大等待时间 -->
-        <property name="maxWait" value="${maxWait}" />
-    </bean>
-
-
-在启动tomcat的时候发现日志里有这么个奇怪的东西: 
-信息: The APR based Apache Tomcat Native library which allows optimal performance in production environments was not found on the java.library.path: 
-C:\Program Files\Java\jre1.6.0_05\bin;D:\java\apache-tomcat-6.0.16\bin实际上是tomcat建议使用apache的apr, 
-解决办法：是把tcnative-1.dll文件放至 Tomcat 6.0\bin 目录下,链接地址:http://tomcat.heanet.ie/native/1.1.10/binaries/win32/tcnative-1.dll
-
-http://tomcat.heanet.ie/native/1.1.3/binaries/win64/amd64/tcnative-1.dll  放到tomcat/bin下即不出现如下提示
-信息: The APR based Apache Tomcat Native library which allows optimal performance in production environments was not found on the java.library.path: D:\Java\jdk1.7.0_80\bin;C:\Windows\Sun\Java\bin;C:\Windows\system32;C:\Windows;D:\Java\jdk1.7.0_80\jre\bin;D:/Java/jdk1.7.0_80/bin/../jre/bin/server;D:/Java/jdk1.7.0_80/bin/../jre/bin;D:/Java/jdk1.7.0_80/bin/../jre/lib/amd64;C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem;C:\Windows\System32\WindowsPowerShell\v1.0\;D:\Java\jdk1.7.0_80\bin;.;C:\Program Files (x86)\Microsoft SQL Server\100\Tools\Binn\;C:\Program Files\Microsoft SQL Server\100\Tools\Binn\;C:\Program Files\Microsoft SQL Server\100\DTS\Binn\;D:\Java\eclipse-java-mars\eclipse;;.
-
-http://www.zuidaima.com/share/2188755504335872.htm
-http://www.wubiaoblog.com/archives/1425
-下载地址：版本：probe-2.2.3.zip
-https://code.google.com/p/psi-probe/downloads/list
-https://oss.sonatype.org/content/repositories/snapshots/com/github/psi-probe/psi-probe-web/3.0.0-SNAPSHOT/
-https://oss.sonatype.org/content/repositories/snapshots/com/github/psi-probe/psi-probe-web/3.0.0-SNAPSHOT/psi-probe-web-3.0.0-20160206.024220-1.war
-
-
-https://bitbucket.org/xerial/sqlite-jdbc/downloads download SQLite3 jdbc 
-http://my.oschina.net/yaolifei/blog/146898 Dao层系列-5-Hibernate JPA
-http://blog.csdn.net/feng88724/article/details/7164983 Tomcat Realm
-导入java.sql包 
-一、加载要连接数据库的驱动程序 
-//Jdbc-Odbc桥 和 Microsoft Access 数据库 
-Class.forName("sun.jdbc.odbc.JdbcOdbcDriver"); 
-// SQL Server 驱动程序: 
-Class.forName("com.microsoft.jdbc.sqlserver.SQLServerDriver"); 
-注：Class.forName()方法将给定的类加载到JVM，如果系统中不存在给定的类，则会引发异常
-二、通过驱动程序管理器得到连接实例 
-Connection conn=null; 
-//1. 
-//1.1建立数据源 
-conn=DriverManager.getConnection("jdbc:odbc:MyDataSource"); //MyDataSource是数据源名称 
-//1-2、不建立数据源 
-conn=DriverManager.getConnection("jdbc:odbc:;Driver=Microsoft Access Driver (*.mdb);DBQ=C:\\VBTest.mdb"); 
-//2.SQL Server 
-conn=DriverManager.getConnection("jdbc:microsoft:sqlserver://127.0.0.1:1433;databasename=mydb","sa",""); 
-注：DriverManager类跟踪已注册的驱动程序，通过getConnection(URL)方法, 找到一个能够连接至URL中指定的数据库驱动程序 
-它接收三个参数, 分别表示1 数据源的名称、类型 2 用户名（可选） 3 密码（可选） 
-三、基于连接对象建立处理器对象 
-Statement stmt=conn.createStatement(); 
-四、准备sql命令 
-String sql="select * from Student"; 
-五、执行命令返回结果集 
-ResultSet rs=stmt.executeQuery(sql); 
-六、显示结果集 
-while(rs.next())//只要后面有记录 
-{ 
-//对当前行的所有字段遍历 
-for(int i=1;i<=rs.getMetaData().getColumnCount();i++) 
-{ 
-System.out.print(rs.getMetaData().getColumnName(i)+": ");//显示字段名 
-System.out.println(rs.getString(i));//显示字段当前值 
-} 
-System.out.println(); 
-} 
-七、关闭资源 
-rs.close(); //关闭记录集 
-stmt.close(); //关闭处理器对象 
-conn.close(); //关闭连接对象 
-预处理器的应用： 
-//3.基于连接对象建立预处理器对象 
-PreparedStatement pstmt=conn.prepareStatement("insert into student values(?,?,?,?)"); 
-//4.给预处理对象的参数赋值 
-pstmt.setString(1,"8888"); 
-pstmt.setString(2,"nemo"); 
-pstmt.setString(3,"accp"); 
-pstmt.setString(4,"sanxianglu"); 
-//5.执行预处理命令 
-int i=pstmt.executeUpdate(); 
-System.out.println(i+"条记录已成功插入！");
-@Before  
-public void setUp() {  
-    String createTableSql = "create memory table test" +  
-    "(id int GENERATED BY DEFAULT AS IDENTITY PRIMARY KEY, " +  
-    "name varchar(100))";  
-    jdbcTemplate.update(createTableSql);  
-         
-    String createHsqldbFunctionSql =  
-      "CREATE FUNCTION FUNCTION_TEST(str CHAR(100)) " +  
-      "returns INT begin atomic return length(str);end";  
-    jdbcTemplate.update(createHsqldbFunctionSql);  
-    String createHsqldbProcedureSql =  
-      "CREATE PROCEDURE PROCEDURE_TEST" +  
-      "(INOUT inOutName VARCHAR(100), OUT outId INT) " +  
-      "MODIFIES SQL DATA " +  
-      "BEGIN ATOMIC " +  
-      "  insert into test(name) values (inOutName); " +  
-      "  SET outId = IDENTITY(); " +  
-      "  SET inOutName = 'Hello,' + inOutName; " +  
-    "END";  
-    jdbcTemplate.execute(createHsqldbProcedureSql);  
-}  
-@After  
-public void tearDown() {  
-    jdbcTemplate.execute("DROP FUNCTION FUNCTION_TEST");  
-    jdbcTemplate.execute("DROP PROCEDURE PROCEDURE_TEST");  
-    String dropTableSql = "drop table test";  
-    jdbcTemplate.execute(dropTableSql);  
-}  
-@Test  
-public void testCallableStatementCreator1() {  
-    final String callFunctionSql = "{call FUNCTION_TEST(?)}";  
-    List<SqlParameter> params = new ArrayList<SqlParameter>();  
-    params.add(new SqlParameter(Types.VARCHAR));  
-    params.add(new SqlReturnResultSet("result",  
-       new ResultSetExtractor<Integer>() {  
-           @Override  
-           public Integer extractData(ResultSet rs) throws SQLException,  
-               DataAccessException {  
-               while(rs.next()) {  
-                   return rs.getInt(1);  
-               }  
-              return 0;  
-       }));  
-    Map<String, Object> outValues = jdbcTemplate.call(  
-       new CallableStatementCreator() {  
-            @Override  
-            public CallableStatement createCallableStatement(Connection conn) throws SQLException {  
-              CallableStatement cstmt = conn.prepareCall(callFunctionSql);  
-              cstmt.setString(1, "test");  
-              return cstmt;  
-    }}, params);  
-    Assert.assertEquals(4, outValues.get("result"));  
-}  
-@Test  
-public void testCallableStatementCreator2() {  
-    JdbcTemplate mysqlJdbcTemplate = new JdbcTemplate(getMysqlDataSource);  
-    //2.创建自定义函数  
-String createFunctionSql =  
-    "CREATE FUNCTION FUNCTION_TEST(str VARCHAR(100)) " +  
-     "returns INT return LENGTH(str)";  
-String dropFunctionSql = "DROP FUNCTION IF EXISTS FUNCTION_TEST";  
-mysqlJdbcTemplate.update(dropFunctionSql);         
-mysqlJdbcTemplate.update(createFunctionSql);  
-//3.准备sql,mysql支持{?= call …}  
-final String callFunctionSql = "{?= call FUNCTION_TEST(?)}";  
-//4.定义参数  
-List<SqlParameter> params = new ArrayList<SqlParameter>();  
-params.add(new SqlOutParameter("result", Types.INTEGER));  
-params.add(new SqlParameter("str", Types.VARCHAR));  
-Map<String, Object> outValues = mysqlJdbcTemplate.call(  
-new CallableStatementCreator() {  
-    @Override  
-    public CallableStatement createCallableStatement(Connection conn) throws SQLException {  
-      CallableStatement cstmt = conn.prepareCall(callFunctionSql);  
-      cstmt.registerOutParameter(1, Types.INTEGER);  
-      cstmt.setString(2, "test");  
-        return cstmt;  
-    }}, params);  
-   Assert.assertEquals(4, outValues.get("result"));  
-}  
-public DataSource getMysqlDataSource() {  
-    String url = "jdbc:mysql://localhost:3306/test";  
-    DriverManagerDataSource dataSource =  
-        new DriverManagerDataSource(url, "root", "");
-     dataSource.setDriverClassName("com.mysql.jdbc.Driver");  
-    return dataSource;  
-}  
-   
-@Test  
-public void testCallableStatementCreator3() {  
-    final String callProcedureSql = "{call PROCEDURE_TEST(?, ?)}";  
-    List<SqlParameter> params = new ArrayList<SqlParameter>();  
-    params.add(new SqlInOutParameter("inOutName", Types.VARCHAR));  
-    params.add(new SqlOutParameter("outId", Types.INTEGER));  
-    Map<String, Object> outValues = jdbcTemplate.call(  
-      new CallableStatementCreator() {  
-        @Override  
-        public CallableStatement createCallableStatement(Connection conn) throws SQLException {  
-          CallableStatement cstmt = conn.prepareCall(callProcedureSql);  
-          cstmt.registerOutParameter(1, Types.VARCHAR);  
-          cstmt.registerOutParameter(2, Types.INTEGER);  
-          cstmt.setString(1, "test");  
-          return cstmt;  
-    }}, params);  
-    Assert.assertEquals("Hello,test", outValues.get("inOutName"));  
-    Assert.assertEquals(0, outValues.get("outId"));  
-}  
-   
-@Test  
-public void testResultSet2() {  
-  jdbcTemplate.update("insert into test(name) values('name5')");  
-  String listSql = "select * from test";  
-  final List result = new ArrayList();  
-  jdbcTemplate.query(listSql, new RowCallbackHandler() {  
-      @Override  
-      public void processRow(ResultSet rs) throws SQLException {  
-          Map row = new HashMap();  
-          row.put(rs.getInt("id"), rs.getString("name"));  
-          result.add(row);  
-  }});  
-  Assert.assertEquals(1, result.size());  
-  jdbcTemplate.update("delete from test where name='name5'");  
-}  
-
-
-@Test  
-public void testPpreparedStatement1() {  
-  int count = jdbcTemplate.execute(new PreparedStatementCreator() {  
-     @Override  
-     public PreparedStatement createPreparedStatement(Connection conn)  
-         throws SQLException {  
-         return conn.prepareStatement("select count(*) from test");  
-     }}, new PreparedStatementCallback<Integer>() {  
-     @Override  
-     public Integer doInPreparedStatement(PreparedStatement pstmt)  
-         throws SQLException, DataAccessException {  
-         pstmt.execute();  
-         ResultSet rs = pstmt.getResultSet();  
-         rs.next();  
-         return rs.getInt(1);  
-      }});      
-   Assert.assertEquals(0, count);  
-}  
-      
-@Test  
-public void testPreparedStatement2() {  
-  String insertSql = "insert into test(name) values (?)";  
-  int count = jdbcTemplate.update(insertSql, new PreparedStatementSetter() {  
-      @Override  
-      public void setValues(PreparedStatement pstmt) throws SQLException {  
-          pstmt.setObject(1, "name4");  
-  }});  
-  Assert.assertEquals(1, count);      
-  String deleteSql = "delete from test where name=?";  
-  count = jdbcTemplate.update(deleteSql, new Object[] {"name4"});  
-  Assert.assertEquals(1, count);  
-}  
  

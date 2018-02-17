@@ -25,6 +25,9 @@ try{
    db.endTransaction();
 }}
 
+
+
+
 Android开发中使用SQLite
 //如果数据库不存在就直接创建库，存在则直接打开库
 SQLiteDatabase db = helper.getWritableDatabase();
@@ -36,6 +39,16 @@ select * from sqlite_sequence ;
 备记(SQLite创建自增字段时)：
 uid integer auto_increment primary key
 在auto_increment前不能有not null default 0等语句
+
+
+
+启动模式有4种，分别为standard、singleTop、singleTask、singleInstance；
+启动模式
+(1)standard：每次激活Activity时(startActivity)，都创建Activity实例，并放入任务栈；
+(2)singleTop：如果某个Activity自己激活自己，即任务栈栈顶就是该Activity，则不需要创建，其余情况都要创建Activity实例；
+(3)singleTask：如果要激活的那个Activity在任务栈中存在该实例，则不需要创建，只需要把此Activity放入栈顶，并把该Activity以上的Activity实例都pop；
+(4)singleInstance：如果应用1的任务栈中创建了MainActivity实例，如果应用2也要激活MainActivity，则不需要创建，两应用共享该Activity实例；
+
 
 不管你使用了哪个注解，作用仅仅是屏蔽android lint错误，所以在方法中还要判断版本做不同的操作，比如：
 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.GINGERBREAD) {  

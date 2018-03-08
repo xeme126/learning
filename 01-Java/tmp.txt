@@ -1,0 +1,5 @@
+Java开发
+response.setHeader("Pragma", "no-cache");  
+response.setHeader("Expires", "0");  
+response.setHeader("Content-Disposition", "filename=\"bb.jnlp\";");  
+response.setContentType("application/x-java-jnlp-file");  

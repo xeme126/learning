@@ -2,7 +2,6 @@
 
 http://www.blogjava.net/zhouf/articles/432234.html
 
-
 ### jdk-1.7.0_80 JAAVA_OPTS ###
 -Dmaven.multiModuleProjectDirectory -Xms128m -Xmx960m -XX:MaxPermSize=160m
 
@@ -101,7 +100,107 @@ http://www.blogjava.net/zhouf/articles/432234.html
 <user username="both" password="tomcat" roles="tomcat,role1"/>
 <user username="probe" password="probe" roles="manager,poweruser,probeuser"/>
 <user username="probe1" password="probe1" roles="tomcat,admin-gui,admin-script,manager-gui,manager-script,manager-jmx,manager-status,poweruser,probeuser"/>
+
+
+
+
+
+
+HTTP验证Tomcat中进行基本验证 (Basic Authentication)和摘要验证 (Digest Authentication)
+
+当一个请求要求取得受保护的资源时，网页服务器回应一个 401 Unauthorized error 错误码。这个回应包含一个指定了验证方法和领域的 WWW-Authenticate 头信息。把这个领域想像成一个存储着用户名和密码的数据库，它将被用来标识受保护资源的有效的用户。
+
+
+### conf/tomcat-users.xml ###
 －－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－
+<user name="tomcat" password="tomcat" roles="tomcat" />
+<user name="role1" password="tomcat" roles="role1" />
+<user name="both" password= "tomcat" roles="tomcat,role1" />
+<user name="yuba" password="yuba123" roles="author" />
+<user name="yuma" password="yuma321" roles="reader" />
+### web.xml ###
+
+－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－
+<security-constraint>
+	<web-resource-collection>
+		<web-resource-name>
+			Restricted Area
+		</web-resource-name>
+		<url-pattern>/chapter/*</url-pattern>
+	</web-resource-collection>
+	<auth-constraint>
+		<role-name>tomcat</role-name>
+		<role-name>author</role-name>
+		<role-name>reader</role-name>
+	</auth-constraint>
+</security-constraint>
+
+<login-config>
+	<auth-method>BASIC</auth-method>
+	<realm-name>Authenticate yourself</realm-name>
+</login-config>
+－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－
+使用摘要验证来实验：
+· 关闭你的 Tomcat 服务器。 
+· 修改你的配置文件 (web.xml)，把 BASIC 换成 DIGEST。 
+－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－
+<login-config>
+	<auth-method>DIGEST</auth-method>
+	<realm-name>Authenticate yourself</realm-name>
+</login-config>
+－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－
+
+
+
+
+//http://rmzdb.iteye.com/blog/2115178
+class AuthImpl extends Authenticator {
+	protected PasswordAuthentication getPasswordAuthentication() {
+		JTextField username = new JTextField();
+		JTextField password = new JPasswordField();
+		JPanel panel = new JPanel(new GridLayout(2, 2));
+		panel.add(new JLabel("User Name"));
+		panel.add(username);
+		panel.add(new JLabel("Password"));
+		panel.add(password);
+		int option = JOptionPane.showConfirmDialog(null, new Object[] {
+				"Site: " + getRequestingHost(),
+				"Realm: " + getRequestingPrompt(), panel },
+				"Enter Network Password", JOptionPane.OK_CANCEL_OPTION,
+				JOptionPane.PLAIN_MESSAGE);
+		if (option == JOptionPane.OK_OPTION) {
+			String user = username.getText();
+			char pass[] = password.getText().toCharArray();
+			return new PasswordAuthentication(user, pass);
+		} else {
+			return null;
+		}
+	}
+}
+
+class BasicReader {
+	public static void main(String argv[]) throws Exception {
+		Authenticator.setDefault(new AuthImpl());
+		if (argv.length != 1) {
+			System.err.println("Usage: java BasicReader <site>");
+			System.exit(1);
+		}
+		URL url = new URL(argv[0]);
+		URLConnection connection = url.openConnection();
+		BufferedReader in = new BufferedReader(new InputStreamReader(
+				connection.getInputStream()));
+
+		String line;
+		StringBuffer sb = new StringBuffer();
+		while ((line = in.readLine()) != null) {
+			sb.append(line);
+		}
+		in.close();
+		System.out.println(sb.toString());
+		System.exit(0);
+	}
+}
+=======
 ### 配置tomcat数据源 ###
 
     <Resource name="jdbc/ds_hsql"
@@ -195,4 +294,3 @@ disableUploadTimeout="true" />
 	<res-auth>Container</res-auth>
 	<res-sharing-scope>Shareable</res-sharing-scope>
 </resource-ref>
-－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－

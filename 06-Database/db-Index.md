@@ -15,8 +15,6 @@ SQL和NoSQL数据库只是用不同的方式来完成相同的事情。
     不相关，不确定和逐步发展的数据需求
     更简单或者更宽松的能够快速开始编程的项目
     速度和可扩展性至关重要的
-    
- 		 
 			 
 各种驱动的连接方法：
 1. MySQL(http://www.mysql.com) mysql-connector-java-2.0.14-bin.jar ;
@@ -46,9 +44,7 @@ sUsr, sPwd );
 8.DB2 Class.forName("com.ibm.db2.jdbc.net.DB2Driver"); 
   String url="jdbc:db2://192.9.200.108:6789/SAMPLE" 
   cn = DriverManager.getConnection( url, sUsr, sPwd ); 
-9.access由于access并不是作为一项服务运行，所以url的方法对他不适用。access可以通过odbc，也可以通过服务器映射路径
-
-的形式 找到.mdb文件
+9.access由于access并不是作为一项服务运行，所以url的方法对他不适用。access可以通过odbc，也可以通过服务器映射路径的形式 找到.mdb文件
 
 
 各种数据库使用JDBC连接的方式，可以作为一个手册使用。 

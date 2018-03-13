@@ -2,12 +2,44 @@
 
 http://www.blogjava.net/zhouf/articles/432234.html
 
+让Tomcat支持目录（文件夹）浏览
+默认情况下，由于安全性的考虑，Tomcat是不让列出目录下的下的文件列表的，直
+
+接访问某个文件，可以访问，而访问目录就会报出404的错误。但是有时候我们开
+
+发中有这样的需求，类似“查看服务器某个目录下的文件列表“这样的需求。如何实
+
+现这一功能呢？非常简单。找到tomcat目录下conf/web.xml，打开后找到如下代码
+    <servlet>  
+        <servlet-name>default</servlet-name>  
+        
+
+<servlet-class>org.apache.catalina.servlets.DefaultServlet</servlet-clas
+
+s>  
+        <init-param>  
+            <param-name>debug</param-name>  
+            <param-value>0</param-value>  
+        </init-param>  
+        <init-param>  
+            <param-name>listings</param-name>  
+            <param-value>true</param-value>  
+        </init-param>  
+        <load-on-startup>1</load-on-startup>  
+    </servlet>  
+默认情况下，listings标签下的值是false，如果想要实现上面说的功能，只需改
+
+成true即可。
 
 ### jdk-1.7.0_80 JAAVA_OPTS ###
--Dmaven.multiModuleProjectDirectory -Xms128m -Xmx960m -XX:MaxPermSize=160m
+-Dmaven.multiModuleProjectDirectory -Xms128m -Xmx960m 
+
+-XX:MaxPermSize=160m
 
 ### Tomcat 8.5.23 conf/server.xml 虚拟目录配置 ###
-<Context path="" docBase="E:/MavenTests/target/tests" reloadable="false" crossContext="false" />
+<Context path="" docBase="E:/MavenTests/target/tests" reloadable="false" 
+
+crossContext="false" />
 
 ### Tomcat 8.5.23 conf/context.xml 数据源配置 ###
     <Resource name="jdbc/ds_hsql"
@@ -27,7 +59,9 @@ http://www.blogjava.net/zhouf/articles/432234.html
         removeAbandonedTimeout="60"
         logAbandoned="true"
         testWhileIdle = "true"
-        validationQuery="select count(1) as cnt from information_schema.tables"
+        validationQuery="select count(1) as cnt from 
+
+information_schema.tables"
         timeBetweenEvictionRunsMillis="30000"
         minEvictableIdleTimeMillis="1800000"
         numTestsPerEvictionRun="3"
@@ -80,11 +114,15 @@ http://www.blogjava.net/zhouf/articles/432234.html
         testOnBorrow="false" />
 
 ### 配置tomcat虚拟目录  ###
-<Context path="" docBase="E:/MavenSpringTests/target/tests" reloadable="false" crossContext="false" />
+<Context path="" docBase="E:/MavenSpringTests/target/tests" 
+
+reloadable="false" crossContext="false" />
 
 ### 配置tomcat管理用户 ###
 编辑文件conf/tomcat-users.xml 按需增减如下
-－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－
+－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－
+
+－
 <role rolename="tomcat"/>
 <role rolename="role1"/>
 <role rolename="admin-gui"/>
@@ -99,9 +137,17 @@ http://www.blogjava.net/zhouf/articles/432234.html
 <user username="tomcat" password="tomcat" roles="tomcat"/>
 <user username="role1" password="tomcat" roles="role1"/>
 <user username="both" password="tomcat" roles="tomcat,role1"/>
-<user username="probe" password="probe" roles="manager,poweruser,probeuser"/>
-<user username="probe1" password="probe1" roles="tomcat,admin-gui,admin-script,manager-gui,manager-script,manager-jmx,manager-status,poweruser,probeuser"/>
-－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－
+<user username="probe" password="probe" 
+
+roles="manager,poweruser,probeuser"/>
+<user username="probe1" password="probe1" 
+
+roles="tomcat,admin-gui,admin-script,manager-gui,manager-script,manager-
+
+jmx,manager-status,poweruser,probeuser"/>
+－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－
+
+－
 ### 配置tomcat数据源 ###
 
     <Resource name="jdbc/ds_hsql"
@@ -119,7 +165,9 @@ http://www.blogjava.net/zhouf/articles/432234.html
         removeAbandonedTimeout="60"
         removeAbandoned="true"
         logAbandoned="true"
-        validationQuery="select count(1) as cnt from information_schema.tables"
+        validationQuery="select count(1) as cnt from 
+
+information_schema.tables"
         testWhileIdle = "true"
         timeBetweenEvictionRunsMillis="30000"
         minEvictableIdleTimeMillis="1800000"
@@ -141,7 +189,9 @@ http://www.blogjava.net/zhouf/articles/432234.html
         removeAbandonedTimeout="60"
         removeAbandoned="true"
         logAbandoned="true"
-        validationQuery="select count(1) as cnt from information_schema.tables"
+        validationQuery="select count(1) as cnt from 
+
+information_schema.tables"
         testWhileIdle = "true"
         timeBetweenEvictionRunsMillis="30000"
         minEvictableIdleTimeMillis="1800000"
@@ -149,7 +199,9 @@ http://www.blogjava.net/zhouf/articles/432234.html
         testOnBorrow="false" />
 
 
-－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－
+－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－
+
+－
 ### tomcat ###
 <Connector port="8080" 
 maxHttpHeaderSize="8192"
@@ -164,16 +216,22 @@ disableUploadTimeout="true" />
 
 
 ### tomcat中配置 servlet listener filter ### 
-－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－
+－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－
+
+－
 <servlet>
 	<description>Test HsqlDB</description>
 	<servlet-name>HSQLServlet</servlet-name>
-	<servlet-class>com.yuba.core.listeners.HSQLServlet</servlet-class>
+	
+
+<servlet-class>com.yuba.core.listeners.HSQLServlet</servlet-class>
 	<load-on-startup>1</load-on-startup>
 </servlet>
 
 <listener>
-	<listener-class>com.yuba.core.listeners.HSQLListener</listener-class>
+	
+
+<listener-class>com.yuba.core.listeners.HSQLListener</listener-class>
 </listener>
 <filter>
 	<filter-name>FirstFilter</filter-name>
@@ -195,4 +253,4 @@ disableUploadTimeout="true" />
 	<res-auth>Container</res-auth>
 	<res-sharing-scope>Shareable</res-sharing-scope>
 </resource-ref>
-－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－
+－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－

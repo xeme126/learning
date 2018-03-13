@@ -1,0 +1,9 @@
+Tab 插入缩进
+Shift+Tab 删除缩进
+Ctrl-U 转换为小写
+Ctrl-Shift-U 转换为大写
+
+Alt+Shift+0 展开全部
+Ctrl+Q 块注释/消除注释
+Ctrl-Shift-Q 区块添加/删除注释
+

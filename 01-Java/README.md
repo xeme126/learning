@@ -1,5 +1,3 @@
-Java开发
-
 
 # rmd.getColumnLabel rs.getString 索引从一开始
 cnt = rmd.getColumnCount()+1;

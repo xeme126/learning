@@ -1,8 +1,113 @@
 
 
-### 配置tomcat管理用户 ### 
+http://www.blogjava.net/zhouf/articles/432234.html
+
+让Tomcat支持目录（文件夹）浏览
+默认情况下，由于安全性的考虑，Tomcat是不让列出目录下的下的文件列表的，直接访问某个文件，可以访问，而访问目录就会报出404的错误。
+但是有时候我们开发中有这样的需求，类似“查看服务器某个目录下的文件列表“这样的需求。如何实现这一功能呢？
+非常简单。找到tomcat目录下conf/web.xml，打开后找到如下代码
+
+    <servlet>  
+        <servlet-name>default</servlet-name>
+<servlet-class>org.apache.catalina.servlets.DefaultServlet</servlet-class>  
+        <init-param>  
+            <param-name>debug</param-name>  
+            <param-value>0</param-value>  
+        </init-param>  
+        <init-param>  
+            <param-name>listings</param-name>  
+            <param-value>true</param-value>  
+        </init-param>  
+        <load-on-startup>1</load-on-startup>  
+    </servlet>  
+默认情况下，listings标签下的值是false，如果想要实现上面说的功能，只需改成true即可。
+
+branch 'master' of https://github.com/xeme126/learning.git
+
+
+### jdk-1.7.0_80 JAAVA_OPTS ###
+-Dmaven.multiModuleProjectDirectory -Xms128m -Xmx960m 
+-XX:MaxPermSize=160m
+
+### Tomcat 8.5.23 conf/server.xml 虚拟目录配置 ###
+<Context path="" docBase="E:/MavenTests/target/tests" reloadable="false" crossContext="false" />
+
+### Tomcat 8.5.23 conf/context.xml 数据源配置 ###
+    <Resource name="jdbc/ds_hsql"
+        auth="Container"
+        type="javax.sql.DataSource"
+        driverClassName="org.hsqldb.jdbcDriver"
+        url="jdbc:hsqldb:file:./bin/abe/dbhs"
+        username="tests"
+        password="tests"
+        initialSize="2"
+        maxTotal="16"
+        maxIdle="8"
+        minIdle="2"
+        maxWaitMillis="30000"
+        removeAbandonedOnBorrow="false"
+        removeAbandonedOnMaintenance="false"
+        removeAbandonedTimeout="60"
+        logAbandoned="true"
+        testWhileIdle = "true"
+        validationQuery="select count(1) as cnt from information_schema.tables"
+        timeBetweenEvictionRunsMillis="30000"
+        minEvictableIdleTimeMillis="1800000"
+        numTestsPerEvictionRun="3"
+        testOnBorrow="false" />
+
+    <Resource name="jdbc/ds_h2db"
+        auth="Container"
+        type="javax.sql.DataSource"
+        driverClassName="org.h2.Driver"
+        url="jdbc:h2:./bin/abe/dbh2"
+        username="tests"
+        password="tests"
+        initialSize="2"
+        maxTotal="16"
+        maxIdle="8"
+        minIdle="2"
+        maxWaitMillis="30000"
+        removeAbandonedOnBorrow="false"
+        removeAbandonedOnMaintenance="false"
+        removeAbandonedTimeout="60"
+        logAbandoned="true"
+        testWhileIdle = "true"
+        validationQuery="select 1"
+        timeBetweenEvictionRunsMillis="30000"
+        minEvictableIdleTimeMillis="1800000"
+        numTestsPerEvictionRun="3"
+        testOnBorrow="false" />
+
+    <Resource name="jdbc/ds_sqlms"
+        auth="Container"
+        type="javax.sql.DataSource"
+        driverClassName="net.sourceforge.jtds.jdbc.Driver"
+        url="jdbc:jtds:sqlserver://localhost:1433;DatabaseName=abab;"
+        username="tests"
+        password="tests"
+        initialSize="2"
+        maxTotal="16"
+        maxIdle="8"
+        minIdle="2"
+        maxWaitMillis="30000"
+        removeAbandonedOnBorrow="false"
+        removeAbandonedOnMaintenance="false"
+        removeAbandonedTimeout="60"
+        logAbandoned="true"
+        testWhileIdle = "true"
+        validationQuery="select 1 "
+        timeBetweenEvictionRunsMillis="30000"
+        minEvictableIdleTimeMillis="1800000"
+        numTestsPerEvictionRun="3"
+        testOnBorrow="false" />
+
+### 配置tomcat虚拟目录  ###
+<Context path="" docBase="E:/MavenSpringTests/target/tests" reloadable="false" crossContext="false" />
+
+### 配置tomcat管理用户 ###
 编辑文件conf/tomcat-users.xml 按需增减如下
-－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－
+－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－
 <role rolename="tomcat"/>
 <role rolename="role1"/>
 <role rolename="admin-gui"/>
@@ -19,4 +124,197 @@
 <user username="both" password="tomcat" roles="tomcat,role1"/>
 <user username="probe" password="probe" roles="manager,poweruser,probeuser"/>
 <user username="probe1" password="probe1" roles="tomcat,admin-gui,admin-script,manager-gui,manager-script,manager-jmx,manager-status,poweruser,probeuser"/>
+
+
+
+
+
+
+HTTP验证Tomcat中进行基本验证 (Basic Authentication)和摘要验证 (Digest Authentication)
+当一个请求要求取得受保护的资源时，网页服务器回应一个 401 Unauthorized error 错误码。这个回应包含一个指定了验证方法和领域的 WWW-Authenticate 头信息。
+把这个领域想像成一个存储着用户名和密码的数据库，它将被用来标识受保护资源的有效的用户。
+
+
+### conf/tomcat-users.xml ###
 －－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－
+<user name="tomcat" password="tomcat" roles="tomcat" />
+<user name="role1" password="tomcat" roles="role1" />
+<user name="both" password= "tomcat" roles="tomcat,role1" />
+<user name="yuba" password="yuba123" roles="author" />
+<user name="yuma" password="yuma321" roles="reader" />
+
+### web.xml ###
+－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－
+<security-constraint>
+	<web-resource-collection>
+		<web-resource-name>
+			Restricted Area
+		</web-resource-name>
+		<url-pattern>/chapter/*</url-pattern>
+	</web-resource-collection>
+	<auth-constraint>
+		<role-name>tomcat</role-name>
+		<role-name>author</role-name>
+		<role-name>reader</role-name>
+	</auth-constraint>
+</security-constraint>
+
+<login-config>
+	<auth-method>BASIC</auth-method>
+	<realm-name>Authenticate yourself</realm-name>
+</login-config>
+
+－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－
+使用摘要验证来实验：
+· 关闭你的 Tomcat 服务器。 
+· 修改你的配置文件 (web.xml)，把 BASIC 换成 DIGEST。 
+－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－
+<login-config>
+	<auth-method>DIGEST</auth-method>
+	<realm-name>Authenticate yourself</realm-name>
+</login-config>
+－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－
+
+### http://rmzdb.iteye.com/blog/2115178
+
+class AuthImpl extends Authenticator {
+	protected PasswordAuthentication getPasswordAuthentication() {
+		JTextField username = new JTextField();
+		JTextField password = new JPasswordField();
+		JPanel panel = new JPanel(new GridLayout(2, 2));
+		panel.add(new JLabel("User Name"));
+		panel.add(username);
+		panel.add(new JLabel("Password"));
+		panel.add(password);
+		int option = JOptionPane.showConfirmDialog(null, new Object[] {
+				"Site: " + getRequestingHost(),
+				"Realm: " + getRequestingPrompt(), panel },
+				"Enter Network Password", JOptionPane.OK_CANCEL_OPTION,
+				JOptionPane.PLAIN_MESSAGE);
+		if (option == JOptionPane.OK_OPTION) {
+			String user = username.getText();
+			char pass[] = password.getText().toCharArray();
+			return new PasswordAuthentication(user, pass);
+		} else {
+			return null;
+		}
+	}
+}
+
+class BasicReader {
+	public static void main(String argv[]) throws Exception {
+		Authenticator.setDefault(new AuthImpl());
+		if (argv.length != 1) {
+			System.err.println("Usage: java BasicReader <site>");
+			System.exit(1);
+		}
+		URL url = new URL(argv[0]);
+		URLConnection connection = url.openConnection();
+		BufferedReader in = new BufferedReader(new InputStreamReader(
+				connection.getInputStream()));
+
+		String line;
+		StringBuffer sb = new StringBuffer();
+		while ((line = in.readLine()) != null) {
+			sb.append(line);
+		}
+		in.close();
+		System.out.println(sb.toString());
+		System.exit(0);
+	}
+}
+
+### 配置tomcat数据源 ###
+
+    <Resource name="jdbc/ds_hsql"
+        auth="Container"
+        type="javax.sql.DataSource"
+        driverClassName="org.hsqldb.jdbcDriver"
+        url="jdbc:hsqldb:file:./bin/afa/hsql.db3"
+        username="tests"
+        password="tests"
+        initialSize="3"
+        maxActive="90"
+        maxWait="12000"
+        removeAbandonedOnBorrow="true"
+        removeAbandonedOnMaintenance="true"
+        removeAbandonedTimeout="60"
+        removeAbandoned="true"
+        logAbandoned="true"
+        validationQuery="select count(1) as cnt from information_schema.tables"
+        testWhileIdle = "true"
+        timeBetweenEvictionRunsMillis="30000"
+        minEvictableIdleTimeMillis="1800000"
+        numTestsPerEvictionRun="3"
+        testOnBorrow="false" />
+
+    <Resource name="jdbc/ds_h2db"
+        auth="Container"
+        type="javax.sql.DataSource"
+        driverClassName="org.h2.Driver"
+        url="jdbc:h2:./bin/afa/h2db.db2"
+        username="tests"
+        password="tests"
+        initialSize="3"
+        maxActive="90"
+        maxWait="12000"
+        removeAbandonedOnBorrow="true"
+        removeAbandonedOnMaintenance="true"
+        removeAbandonedTimeout="60"
+        removeAbandoned="true"
+        logAbandoned="true"
+        validationQuery="select count(1) as cnt from information_schema.tables"
+        testWhileIdle = "true"
+        timeBetweenEvictionRunsMillis="30000"
+        minEvictableIdleTimeMillis="1800000"
+        numTestsPerEvictionRun="3"
+        testOnBorrow="false" />
+
+
+### tomcat ###
+<Connector port="8080" 
+maxHttpHeaderSize="8192"
+maxThreads="150" 
+minSpareThreads="25" 
+maxSpareThreads="75"  
+enableLookups="false" 
+redirectPort="8443" 
+acceptCount="100" 
+connectionTimeout="20000" 
+disableUploadTimeout="true" />
+
+
+### tomcat中配置 servlet listener filter ### 
+－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－
+<servlet>
+	<description>Test HsqlDB</description>
+	<servlet-name>HSQLServlet</servlet-name>
+	<servlet-class>com.yuba.core.listeners.HSQLServlet</servlet-class>
+	<load-on-startup>1</load-on-startup>
+</servlet>
+
+<listener>
+<listener-class>com.yuba.core.listeners.HSQLListener</listener-class>
+</listener>
+
+<filter>
+	<filter-name>FirstFilter</filter-name>
+	<filter-class>com.yuba.tests.FirstFilter</filter-class>
+	<init-param>
+		<param-name>targetFilterLifecycle</param-name>
+		<param-value>true</param-value>
+	</init-param>
+</filter>
+<filter-mapping>
+	<filter-name>FirstFilter</filter-name>
+	<url-pattern>/*</url-pattern>
+</filter-mapping>
+
+<resource-ref>
+	<description>mysql connection pool</description>
+	<res-ref-name>jdbc/ds_mysql</res-ref-name>
+	<res-type>javax.sql.DataSource</res-type>
+	<res-auth>Container</res-auth>
+	<res-sharing-scope>Shareable</res-sharing-scope>
+</resource-ref>
+

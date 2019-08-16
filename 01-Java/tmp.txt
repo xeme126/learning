@@ -3,3 +3,14 @@ response.setHeader("Pragma", "no-cache");
 response.setHeader("Expires", "0");  
 response.setHeader("Content-Disposition", "filename=\"bb.jnlp\";");  
 response.setContentType("application/x-java-jnlp-file");  
+
+Sec-WebSocket-Key/Sec-WebSocket-Accept在主要作用在于提供基础的防护，减少恶意连接、意外连接。
+WebSocket用途
+JavaScript聊天
+多人在线游戏
+在线股票网站
+在线即时新闻网站
+高清视频流
+应用程序群集节点之间的通信
+在应用程序之间跨网络传输大量事务数据
+远程系统或者软件状态和性能的实时监控

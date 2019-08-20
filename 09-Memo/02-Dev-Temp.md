@@ -1,4 +1,8 @@
 
+
+private static final Logger LOG = Logger.getLogger(HsqlDbListener.class);
+
+
 http状态返回代码 1xx（临时响应）
 表示临时响应并需要请求者继续执行操作的状态代码。
 

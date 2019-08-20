@@ -1,4 +1,15 @@
 
+### 解决 ###
+Spring Boot 1.4以下
+multipart.maxFileSize = 10Mb //单个文件的大小
+multipart.maxRequestSize=100Mb //单次请求的文件的总大小
+Spring Boot1.4版本后
+spring.http.multipart.maxFileSize = 10Mb
+spring.http.multipart.maxRequestSize=100Mb
+Spring Boot2.0之后
+spring.servlet.multipart.max-file-size=10000000
+spring.servlet.multipart.max-request-size=100000000
+
 
 
 <Resource name="jdbc/ds_mysql"
